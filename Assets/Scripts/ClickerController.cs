@@ -26,9 +26,10 @@ public class ClickerController : MonoBehaviour {
         moneyText.text = "Money: " + money.ToString();
     }
 
-    void OnMouseDown()
+    public void buttonPressed()
     {
         money += moneyPerClick;
         updateMoneyText();
     }
+    
 }
