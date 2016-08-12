@@ -4,31 +4,15 @@ using UnityEngine.UI;
 
 public class ClickerController : MonoBehaviour {
 
-    private int money;
-    public Text moneyText;
-    private int moneyPerClick;
-
+    private StatTracker stats;
 	// Use this for initialization
-	void Start () {
-        money = 0;
-        updateMoneyText();
-        moneyPerClick = 1;
-
+	void Awake () {
+        stats = StatTracker.Instance;
     }
-	
-	// Update is called once per frame
-	void Update () {
-	    
-	}
 
-    void updateMoneyText()
+    public void buttonPressed()
     {
-        moneyText.text = "Money: " + money.ToString();
+        stats.buttonPressed();
     }
-
-    void OnMouseDown()
-    {
-        money += moneyPerClick;
-        updateMoneyText();
-    }
+    
 }
