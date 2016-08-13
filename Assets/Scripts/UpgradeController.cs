@@ -3,10 +3,14 @@ using System.Collections;
 
 public class UpgradeController : MonoBehaviour {
 
-	
 
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    private StatTracker stats;
+    // Use this for initialization
+    void Awake()
+    {
+        stats = StatTracker.Instance;
+    }
+
+
+    
 }
