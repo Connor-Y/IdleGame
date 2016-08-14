@@ -13,8 +13,8 @@ public class ClickerController : Singleton<ClickerController> {
     }
 
     public void buttonPressed()
-    {
-        stats.incrementMoney(stats.getMoneyPerClick());
+    { // TODO: Decide on the order of operations here
+        stats.incrementMoney((long) (stats.getMoneyPerClick() * stats.getGlobalClickMultiplier() * stats.getPermanentClickMultiplier()) + stats.getPermanentClickIncrement());
     }
 
 }

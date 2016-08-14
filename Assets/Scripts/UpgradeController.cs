@@ -39,108 +39,41 @@ public class UpgradeController : Singleton<UpgradeController>
         UpgradeObjectDict.Add(13, new UpgradeObject("13", 26500000000, flatMultiplier, 13812800, false));
         UpgradeObjectDict.Add(14, new UpgradeObject("14", 250000000000, flatMultiplier, 92000000, false));
         UpgradeObjectDict.Add(15, new UpgradeObject("15", 3200000000000, flatMultiplier, 603400000, false));
+        UpgradeObjectDict.Add(16, new UpgradeObject("C1", 50, flatMultiplier, 1, true));
 
-
+        // TODO: Make sure to actually add the effects of every object that starts with a base level above 0
     }
 
-
-    // Formula for calculating how much the next upgrade of a building will cost
-    private long costFormula(UpgradeObject obj)
+    private bool checkValidId(int id)
     {
-        int numPurchased = obj.getNumUpgrades();
-        long baseCost = obj.getBaseCost();
-        float costMulitplier = obj.getMultiplier();
-        long costBeforeGlobal;
-        if (numPurchased == 0)
-            costBeforeGlobal = baseCost; 
-        else
-            costBeforeGlobal = (long)(baseCost * Mathf.Pow(costMulitplier, numPurchased)); 
-
-        Debug.Log("Cost Values - numPurchased: " + numPurchased + " baseCost: " + baseCost + " multiplier: " + costMulitplier + " Global Modifiers N/A" + " costBeforeGlobal: " + costBeforeGlobal);
-
-        return costBeforeGlobal; // TODO: Multiply by global modifiers here
-    }
-
-    // True iff you can afford upgrade with given id
-    private bool canAfford(UpgradeObject obj)
-    {
-        if (stats.getMoney() > costFormula(obj))
+        if (UpgradeObjectDict.ContainsKey(id))
             return true;
 
         return false;
     }
 
-
+    private UpgradeObject getUpgradeWithId(int id)
+    {
+        return UpgradeObjectDict[id];  
+    }
 
     // int id refers to the id of the chosen upgrade
-    // Attempt to purchase the choosen upgrade
-    // This is the method that should be called by the button
-    public void buildingUpgrade(int id)
+    public void purchaseBuildingUpgrade(int id)
     {
-        UpgradeObject obj;
-        // Get the UpgradeObject using id.
-        if (!UpgradeObjectDict.TryGetValue(id, out obj)) {
-            // If ID is invalid exit
-            Debug.Log("Invalid Upgrade ID entered");
+        // Check if id is valid
+        if (!checkValidId(id))
+        {
+            Debug.Log("Invalid ID");
             return;
         }
+      
+        UpgradeObject obj = getUpgradeWithId(id);
+        
 
-
-        if (canAfford(obj))
-        {
-            //Debug.Log("Purchasing ID " + obj.getName());
-            updateMoneyStats(obj);
-            obj.buyUpgrade();
-            
-        } else
-        {
-            Debug.Log("Cant afford upgrade");
-            // TODO: Respond to invalid amount here (Possibly do nothing)
-        }
-
+        // Attempt to purchase the upgrade
+        obj.purchase();
 
     }
  
-    // Formula for clicker upgrades
-    private long clickerUpgradeFormula(UpgradeObject obj)
-    {
-        return obj.getModifier(); // Currently return a flat amount TODO: Include global modifiers
-    }
-
-    private long buildingUpgradeFormula(UpgradeObject obj)
-    {
-        return obj.getModifier(); // Currently return a flat amount TODO: Include global modifiers
-    }
-
-    private void updateMoneyStats(UpgradeObject obj)
-    {
-        //Debug.Log("Update Money Stats");
-        if (obj.isClikerUpgrade()) {
-            //Debug.Log("Clicker Upgrade");
-            long upgradeVal = clickerUpgradeFormula(obj);
-            stats.incrementMoneyPerClick(upgradeVal);
-            // Pay the cost of the building
-            stats.decrementMoney(costFormula(obj));
-        } else
-        {
-            //Debug.Log("Building Upgrade");
-            long upgradeVal = buildingUpgradeFormula(obj);
-            stats.incrementeMoneyRate(upgradeVal);
-            // Pay the cost of the building
-            stats.decrementMoney(costFormula(obj));
-        }
-    }
-
-
-
-   
-
-
-
-
-
-
-
-
-
+ 
 }
