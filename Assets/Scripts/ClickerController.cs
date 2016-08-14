@@ -2,7 +2,9 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class ClickerController : MonoBehaviour {
+public class ClickerController : Singleton<ClickerController> {
+
+    private ClickerController() { }
 
     private StatTracker stats;
 	// Use this for initialization
@@ -12,7 +14,7 @@ public class ClickerController : MonoBehaviour {
 
     public void buttonPressed()
     {
-        stats.buttonPressed();
+        stats.incrementMoney(stats.getMoneyPerClick());
     }
-    
+
 }
