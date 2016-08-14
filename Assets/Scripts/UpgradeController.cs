@@ -10,64 +10,49 @@ public class UpgradeController : Singleton<UpgradeController>
 
     //private GameObject[] upgradeList;
 
-    // # of upgrades purchased at given id
-    private Dictionary<int, int> numOfUpgradesPurchased;
-    // upgrade cost modifier at id
-    private Dictionary<int, int> baseUpgradeCost;
-    // upgrade cost modifier at id
-    private Dictionary<int, float> baseUpgradeMultiplier;
-    // upgrade value modifer at id
-    private Dictionary<int, int> baseUpgradeModifier;
-    // List of id's which are clicker upgrades;
-    private List<int> clickerUpgradeList;
+
 
 
     private StatTracker stats;
-
-    private int numOfUpgrades;
+    private Dictionary<int, UpgradeObject> UpgradeObjectDict;
+    private const float flatMultiplier = 1.07f;
 
     void Start()
     {
         Debug.Log("UpgradeController Start");
         stats = StatTracker.Instance;
-        numOfUpgrades = 3;
- 
-        numOfUpgradesPurchased = new Dictionary<int, int>();
-        baseUpgradeCost = new Dictionary<int, int>();
-        baseUpgradeMultiplier = new Dictionary<int, float>();
-        baseUpgradeModifier = new Dictionary<int, int>();
-        clickerUpgradeList = new List<int>();
+        UpgradeObjectDict = new Dictionary<int, UpgradeObject>();
+
+        // Add each possible upgrade to the upgradelist'
+        UpgradeObjectDict.Add(1, new UpgradeObject("1", 25, flatMultiplier, 1, false));
+        UpgradeObjectDict.Add(2, new UpgradeObject("2", 150, flatMultiplier, 5, false));
+        UpgradeObjectDict.Add(3, new UpgradeObject("3", 525, flatMultiplier, 15, false));
 
 
-
-        for (int i = 0; i < numOfUpgrades; i++)
-        {
-            numOfUpgradesPurchased.Add(i, 0);
-            // TODO: Remove and set proper values
-            baseUpgradeCost.Add(i, 10); 
-            baseUpgradeMultiplier.Add(i, 1.07f);
-            baseUpgradeModifier.Add(i, 2); 
-        }
     }
 
 
     // Formula for calculating how much the next upgrade of a building will cost
-    private int costFormula(int id)
+    private int costFormula(UpgradeObject obj)
     {
-        int numPurchased = numOfUpgradesPurchased[id];
-        int baseCost = baseUpgradeCost[id];
-        float costMulitplier = baseUpgradeMultiplier[id];
-        int finalCost = (int)(baseCost * Mathf.Pow(costMulitplier, numPurchased));
+        int numPurchased = obj.getNumUpgrades();
+        int baseCost = obj.getBaseCost();
+        float costMulitplier = obj.getMultiplier();
+        int costBeforeGlobal;
+        if (numPurchased == 0)
+            costBeforeGlobal = baseCost; 
+        else
+            costBeforeGlobal = (int)(baseCost * Mathf.Pow(costMulitplier, numPurchased)); 
 
-        Debug.Log("Cost Values - numPurchased: " + numPurchased + " baseCost: " + baseCost + " multiplier: " + costMulitplier + " finalCost: " + finalCost);
+        Debug.Log("Cost Values - numPurchased: " + numPurchased + " baseCost: " + baseCost + " multiplier: " + costMulitplier + " Global Modifiers N/A" + " costBeforeGlobal: " + costBeforeGlobal);
 
-        return finalCost;
+        return costBeforeGlobal; // TODO: Multiply by global modifiers here
     }
 
     // True iff you can afford upgrade with given id
-    private bool canAfford(int id)
+    private bool canAfford(UpgradeObject obj)
     {
-        if (stats.getMoney() > costFormula(id))
+        if (stats.getMoney() > costFormula(obj))
             return true;
 
         return false;
@@ -80,39 +65,21 @@ public class UpgradeController : Singleton<UpgradeController>
     // This is the method that should be called by the button
     public void buildingUpgrade(int id)
     {
-        int val;
-        float fval;
-        bool validId = true;
-
-        // Check to make sure the given ID is valid in all dicts
-        if (!numOfUpgradesPurchased.TryGetValue(id, out val))
-        {
-            validId = false;
-        }
-        else if (!baseUpgradeCost.TryGetValue(id, out val))
-        {
-            validId = false;
-        }
-        if (!baseUpgradeMultiplier.TryGetValue(id, out fval))
-        {
-            validId = false;
-        }
-        else if (!baseUpgradeModifier.TryGetValue(id, out val))
-        {
-            validId = false;
-        }
-        
-        if (!validId)
-        {
-            Debug.Log("ID " + id + " was not found");
+        UpgradeObject obj;
+        // Get the UpgradeObject using id.
+        if (!UpgradeObjectDict.TryGetValue(id, out obj)) {
+            // If ID is invalid exit
+            Debug.Log("Invalid Upgrade ID entered");
             return;
         }
 
-        if (canAfford(id))
+
+        if (canAfford(obj))
         {
-            Debug.Log("Purchasing ID " + id);
-            numOfUpgradesPurchased[id] += 1;
-            updateMoneyStats(id);
+            //Debug.Log("Purchasing ID " + obj.getName());
+            updateMoneyStats(obj);
+            obj.buyUpgrade();
+            
         } else
         {
             Debug.Log("Cant afford upgrade");
@@ -121,40 +88,34 @@ public class UpgradeController : Singleton<UpgradeController>
 
 
     }
-
-    // Decrease money by value counting modifies 
-    private int purchaseFormula(int id)
-    {
-        return (-1 * costFormula(id)); // TODO: Set to include any modifiers when they are added.
-    }
-    
+ 
     // Formula for clicker upgrades
-    private int clickerUpgradeFormula(int id)
+    private int clickerUpgradeFormula(UpgradeObject obj)
     {
-        return baseUpgradeModifier[id]; // Currently return a flat amount TODO: Include modifiers
+        return obj.getModifier(); // Currently return a flat amount TODO: Include global modifiers
     }
 
-    private int buildingUpgradeFormula(int id)
+    private int buildingUpgradeFormula(UpgradeObject obj)
     {
-        return baseUpgradeModifier[id]; // Currently return a flat amount TODO: Include modifiers
+        return obj.getModifier(); // Currently return a flat amount TODO: Include global modifiers
     }
 
-    private void updateMoneyStats(int id)
+    private void updateMoneyStats(UpgradeObject obj)
     {
-        Debug.Log("Update Money Stats");
-        if (clickerUpgradeList.Contains(id)) {
-            Debug.Log("Clicker Upgrade");
-            int upgradeVal = clickerUpgradeFormula(id);
+        //Debug.Log("Update Money Stats");
+        if (obj.isClikerUpgrade()) {
+            //Debug.Log("Clicker Upgrade");
+            int upgradeVal = clickerUpgradeFormula(obj);
             stats.incrementMoneyPerClick(upgradeVal);
             // Pay the cost of the building
-            stats.incrementMoney(purchaseFormula(id));
+            stats.decrementMoney(costFormula(obj));
         } else
         {
-            Debug.Log("Building Upgrade");
-            int upgradeVal = buildingUpgradeFormula(id);
+            //Debug.Log("Building Upgrade");
+            int upgradeVal = buildingUpgradeFormula(obj);
             stats.incrementeMoneyRate(upgradeVal);
             // Pay the cost of the building
-            stats.incrementMoney(purchaseFormula(id));
+            stats.decrementMoney(costFormula(obj));
         }
     }
 

@@ -18,7 +18,7 @@ public class StatTracker : Singleton<StatTracker>
     {
         Debug.Log("Stats Awake");
         timeStamp = getUnixTime(); // TODO: Figure out how to store unix timestamp on app close or shutdown 
-        money = 10; // TODO: Set to decided starting value
+        money = 100; // TODO: Set to decided starting value
         moneyPerClick = 1;
     }
  
@@ -44,6 +44,11 @@ public class StatTracker : Singleton<StatTracker>
     public void incrementMoney(int x)
     {
         money += x;
+    }
+
+    public void decrementMoney(int x)
+    {
+        money -= x;
     }
 
     public void incrementMoneyPerClick(int x)
