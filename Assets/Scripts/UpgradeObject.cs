@@ -9,17 +9,17 @@ public class UpgradeObject {
     // # of upgrades purchased
     private int numOfUpgradesPurchased;
     // upgrade cost modifier
-    private int baseUpgradeCost;
+    private long baseUpgradeCost;
     // upgrade cost modifier
     private float baseUpgradeMultiplier;
     // upgrade value modifer at id
-    private int baseUpgradeModifier;
+    private long baseUpgradeModifier;
     // Is clicker upgrade
     private bool isClicker;
     // Default # of upgrades
     private int defaultLevel;
 
-    public UpgradeObject (string objectName, int baseCost, float baseMultiplier, int baseModifier, bool isClicker, int baseLevel = 0)
+    public UpgradeObject (string objectName, long baseCost, float baseMultiplier, long baseModifier, bool isClicker, int baseLevel = 0)
     {
         this.objectName = objectName;
         numOfUpgradesPurchased = baseLevel;
@@ -35,7 +35,7 @@ public class UpgradeObject {
         return objectName;
     }
 
-    public int getBaseCost()
+    public long getBaseCost()
     {
         return baseUpgradeCost;
     }
@@ -50,7 +50,7 @@ public class UpgradeObject {
         return baseUpgradeMultiplier;
     }
 
-    public int getModifier()
+    public long getModifier()
     {
         return baseUpgradeModifier;
     }

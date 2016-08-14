@@ -25,24 +25,36 @@ public class UpgradeController : Singleton<UpgradeController>
 
         // Add each possible upgrade to the upgradelist'
         UpgradeObjectDict.Add(1, new UpgradeObject("1", 25, flatMultiplier, 1, false));
-        UpgradeObjectDict.Add(2, new UpgradeObject("2", 150, flatMultiplier, 5, false));
-        UpgradeObjectDict.Add(3, new UpgradeObject("3", 525, flatMultiplier, 15, false));
+        UpgradeObjectDict.Add(2, new UpgradeObject("2", 150, flatMultiplier, 6, false));
+        UpgradeObjectDict.Add(3, new UpgradeObject("3", 525, flatMultiplier, 17, false));
+        UpgradeObjectDict.Add(4, new UpgradeObject("4", 2400, flatMultiplier, 55, false));
+        UpgradeObjectDict.Add(5, new UpgradeObject("5", 11500, flatMultiplier, 195, false));
+        UpgradeObjectDict.Add(6, new UpgradeObject("6", 56500, flatMultiplier, 745, false));
+        UpgradeObjectDict.Add(7, new UpgradeObject("7", 255000, flatMultiplier, 2180, false));
+        UpgradeObjectDict.Add(8, new UpgradeObject("8", 1400000, flatMultiplier, 9425, false));
+        UpgradeObjectDict.Add(9, new UpgradeObject("9", 8500000, flatMultiplier, 37200, false));
+        UpgradeObjectDict.Add(10, new UpgradeObject("10", 53000000, flatMultiplier, 156400, false));
+        UpgradeObjectDict.Add(11, new UpgradeObject("11", 375000000, flatMultiplier, 744200, false));
+        UpgradeObjectDict.Add(12, new UpgradeObject("12", 2950000000, flatMultiplier, 3402000, false));
+        UpgradeObjectDict.Add(13, new UpgradeObject("13", 26500000000, flatMultiplier, 13812800, false));
+        UpgradeObjectDict.Add(14, new UpgradeObject("14", 250000000000, flatMultiplier, 92000000, false));
+        UpgradeObjectDict.Add(15, new UpgradeObject("15", 3200000000000, flatMultiplier, 603400000, false));
 
 
     }
 
 
     // Formula for calculating how much the next upgrade of a building will cost
-    private int costFormula(UpgradeObject obj)
+    private long costFormula(UpgradeObject obj)
     {
         int numPurchased = obj.getNumUpgrades();
-        int baseCost = obj.getBaseCost();
+        long baseCost = obj.getBaseCost();
         float costMulitplier = obj.getMultiplier();
-        int costBeforeGlobal;
+        long costBeforeGlobal;
         if (numPurchased == 0)
             costBeforeGlobal = baseCost; 
         else
-            costBeforeGlobal = (int)(baseCost * Mathf.Pow(costMulitplier, numPurchased)); 
+            costBeforeGlobal = (long)(baseCost * Mathf.Pow(costMulitplier, numPurchased)); 
 
         Debug.Log("Cost Values - numPurchased: " + numPurchased + " baseCost: " + baseCost + " multiplier: " + costMulitplier + " Global Modifiers N/A" + " costBeforeGlobal: " + costBeforeGlobal);
 
@@ -90,12 +102,12 @@ public class UpgradeController : Singleton<UpgradeController>
     }
  
     // Formula for clicker upgrades
-    private int clickerUpgradeFormula(UpgradeObject obj)
+    private long clickerUpgradeFormula(UpgradeObject obj)
     {
         return obj.getModifier(); // Currently return a flat amount TODO: Include global modifiers
     }
 
-    private int buildingUpgradeFormula(UpgradeObject obj)
+    private long buildingUpgradeFormula(UpgradeObject obj)
     {
         return obj.getModifier(); // Currently return a flat amount TODO: Include global modifiers
     }
@@ -105,14 +117,14 @@ public class UpgradeController : Singleton<UpgradeController>
         //Debug.Log("Update Money Stats");
         if (obj.isClikerUpgrade()) {
             //Debug.Log("Clicker Upgrade");
-            int upgradeVal = clickerUpgradeFormula(obj);
+            long upgradeVal = clickerUpgradeFormula(obj);
             stats.incrementMoneyPerClick(upgradeVal);
             // Pay the cost of the building
             stats.decrementMoney(costFormula(obj));
         } else
         {
             //Debug.Log("Building Upgrade");
-            int upgradeVal = buildingUpgradeFormula(obj);
+            long upgradeVal = buildingUpgradeFormula(obj);
             stats.incrementeMoneyRate(upgradeVal);
             // Pay the cost of the building
             stats.decrementMoney(costFormula(obj));
