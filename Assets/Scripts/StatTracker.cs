@@ -10,47 +10,52 @@ public class StatTracker : Singleton<StatTracker>
 
     private long timeStamp;
 
-    private int money;
-    private int moneyPerClick;
-    private int moneyRate;
+    private long money;
+    private long moneyPerClick;
+    private long moneyRate;
 
     void Awake()
     {
         Debug.Log("Stats Awake");
         timeStamp = getUnixTime(); // TODO: Figure out how to store unix timestamp on app close or shutdown 
-        money = 10; // TODO: Set to decided starting value
+        money = 100; // TODO: Set to decided starting value
         moneyPerClick = 1;
     }
  
     // Private to prevent being called outside of singleton instance.
     private StatTracker() { }
 
-    public int getMoney()
+    public long getMoney()
     { 
         return money;
     }
 
-    public int getMoneyPerClick()
+    public long getMoneyPerClick()
     {
         return moneyPerClick;
     }
 
-    public int getMoneyRate()
+    public long getMoneyRate()
     {
         return moneyRate;
     }
 
 
-    public void incrementMoney(int x)
+    public void incrementMoney(long x)
     {
         money += x;
     }
 
-    public void incrementMoneyPerClick(int x)
+    public void decrementMoney(long x)
+    {
+        money -= x;
+    }
+
+    public void incrementMoneyPerClick(long x)
     {
         moneyPerClick += x;
     }
-    public void incrementeMoneyRate(int x)
+    public void incrementeMoneyRate(long x)
     {
         moneyRate += x;
     }
