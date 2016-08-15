@@ -1,76 +1,153 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class StatTracker : Singleton<StatTracker>
 {
+
     public Text moneyText;
 
-    private static StatTracker instance;
+    private long timeStamp;
 
-    private int money;
-    private int moneyRate;
-    private int moneyPerClick;
+    private long money;
+    private long moneyPerClick;
+    private long moneyRate;
 
-    private GameObject[] upgradeList;
-    private int numOfUpgrades;
-    private int[] upgradesPurchased;
-    private int[] upgradeModifier;
-    private int[] upgradeCost;
+    // Global Modifers
+    private float globalRateMultiplier;
+    private float globalClickMultiplier;
+    private float globalUpgradeCostMultiplier;
 
+    // Permanent Modifers (Remain through prestige)
+    private float permanentRateMultiplier;
+    private float permanentClickMultiplier;
+    private float permanentUpgradeCostMultiplier;
+    private long permanentClickIncrement;
 
     void Awake()
     {
-        money = 0;
-        moneyRate = 0;
+        Debug.Log("Stats Awake");
+        timeStamp = getUnixTime(); // TODO: Figure out how to store unix timestamp on app close or shutdown 
+        money = 100; // TODO: Set to decided starting value
         moneyPerClick = 1;
-        //upgradeList = GameObject.FindGameObjectsWithTag("Upgrade");
-        //numOfUpgrades = upgradeList.Length;
-        numOfUpgrades = 3;
-        upgradesPurchased = new int[numOfUpgrades];
-        upgradeModifier = new int[numOfUpgrades];
-        upgradeCost = new int[numOfUpgrades];
+        globalRateMultiplier = 1f;
+        globalClickMultiplier = 1f; 
+        globalUpgradeCostMultiplier = 1f;
 
-        for (int i = 0; i < numOfUpgrades; i++)
-        {
-            upgradesPurchased[i] = 0;
-            upgradeCost[i] = 10; // TODO: Remove and set proper values
-            upgradeModifier[i] = 2; // TODO: Remove and set proper values
-        }
+        permanentRateMultiplier = 1f;
+        permanentClickMultiplier = 1f;
+        permanentUpgradeCostMultiplier = 1f;
+        permanentClickIncrement = 0;
+
     }
  
     // Private to prevent being called outside of singleton instance.
-    private StatTracker()
-    {
-        
-    }
+    private StatTracker() { }
 
-    public int getMoney()
-    {
+    public long getMoney()
+    { 
         return money;
     }
 
-    public void buttonPressed()
+    public long getMoneyPerClick()
     {
-        money += moneyPerClick;
-        updateMoneyText();
+        return moneyPerClick;
     }
 
-    public void incrementMoney(int x)
-    {
-        money += x;
-        updateMoneyText();
-    }
-
-    public int getMoneyRate()
+    public long getMoneyRate()
     {
         return moneyRate;
     }
 
-    public void incrementeMoneyRate(int x)
+    public float getGlobalRateMultiplier()
+    {
+        return globalRateMultiplier;
+    }
+
+    public float getGlobalClickMultiplier()
+    {
+        return globalClickMultiplier;
+    }
+
+    public float getGlobalUpgradeCostMultiplier()
+    {
+        return globalUpgradeCostMultiplier;
+    }
+
+
+    public float getPermanentRateMultiplier()
+    {
+        return permanentRateMultiplier;
+    }
+
+    public float getPermanentClickMultiplier()
+    {
+        return permanentClickMultiplier;
+    }
+
+    public float getPermanentUpgradeCostMultiplier()
+    {
+        return permanentUpgradeCostMultiplier;
+    }
+
+    public long getPermanentClickIncrement()
+    {
+        return permanentClickIncrement;
+    }
+
+    public void incrementGlobalRateMultiplier(float x)
+    {
+        globalRateMultiplier += x;
+    }
+
+    public void incrementGlobalClickMultiplier(float x)
+    {
+        globalClickMultiplier += x;
+    }
+
+    public void decrementGlobalCostMultiplier(float x)
+    {
+        globalUpgradeCostMultiplier -= x;
+    }
+
+    public void incrementPermanentRateMultiplier(float x)
+    {
+        permanentRateMultiplier += x;
+    }
+
+    public void incrementPermanentClickMultiplier(float x)
+    {
+        permanentClickMultiplier += x;
+    }
+
+    public void decrementPermanentlCostMultiplier(float x)
+    {
+        permanentUpgradeCostMultiplier -= x;
+    }
+
+    public void incrementPermanentClickIncrement(long x)
+    {
+        permanentClickIncrement += x;
+    }
+
+    public void incrementMoney(long x)
+    {
+        money += x;
+    }
+
+    public void decrementMoney(long x)
+    {
+        money -= x;
+    }
+
+    public void incrementMoneyPerClick(long x)
+    {
+        moneyPerClick += x;
+    }
+    public void incrementeMoneyRate(long x)
     {
         moneyRate += x;
-        updateMoneyText();
     }
 
     public void resetMoneyValues()
@@ -78,7 +155,18 @@ public class StatTracker : Singleton<StatTracker>
         money = 0;
         moneyRate = 0;
         moneyPerClick = 1;
-        updateMoneyText();
+        globalClickMultiplier = 1f; 
+        globalClickMultiplier = 1f; 
+        globalUpgradeCostMultiplier = 1f; 
+    }
+
+    public void hardReset()
+    {
+        resetMoneyValues();
+        permanentClickIncrement = 0;
+        permanentClickMultiplier = 1f;
+        permanentRateMultiplier = 1f;
+        permanentUpgradeCostMultiplier = 1f;
     }
 
     public void updateMoneyText()
@@ -86,9 +174,21 @@ public class StatTracker : Singleton<StatTracker>
         moneyText.text = "Money: " + money.ToString();
     }
 
+    public long getUnixTime()
+    {
+        return (long)(System.DateTime.UtcNow.Subtract(new System.DateTime(1970, 1, 1))).TotalSeconds;
+    }
+
     // Update is called once per frame
     void Update()
     {
+        // Check if a second has passed, if so increase money by moneyRate
+        // TODO: Change this to run off of a servers time. Need a way to handle offline mode.
+        if (timeStamp < getUnixTime())
+        {
+            money += moneyRate * (int)(getUnixTime() - timeStamp);
+            timeStamp = getUnixTime();
+        }
         updateMoneyText();
 
     }
