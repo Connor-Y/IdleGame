@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e3d49f446910bc84687cfddf7db260fa
+guid: cf1c4de6b11d1c74384c5a0f248dd21e
 timeCreated: 1471280892
 licenseType: Free
 ModelImporter:
@@ -7,12 +7,12 @@ ModelImporter:
   fileIDToRecycleName:
     100000: Camera
     100002: Camera.target
-    100004: Model
-    100006: //RootNode
+    100004: //RootNode
+    100006: Model
     400000: Camera
     400002: Camera.target
-    400004: Model
-    400006: //RootNode
+    400004: //RootNode
+    400006: Model
     2300000: Model
     3300000: Model
     4300000: Model
