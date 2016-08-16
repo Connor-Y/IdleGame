@@ -147,7 +147,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 114000010684089234, guid: 5528d1071defe064a9eb716421b74e3c,
           type: 2}
-        m_MethodName: buildingUpgrade
+        m_MethodName: purchaseBuildingUpgrade
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

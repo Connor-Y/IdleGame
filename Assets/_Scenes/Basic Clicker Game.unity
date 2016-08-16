@@ -396,7 +396,12 @@ Prefab:
     - target: {fileID: 114000013298659806, guid: 163c896a46e8f8c47ae9f92d8a67b55b,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
-      value: 1
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013068168366, guid: 163c896a46e8f8c47ae9f92d8a67b55b,
+        type: 2}
+      propertyPath: m_Text
+      value: Upgrade 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 163c896a46e8f8c47ae9f92d8a67b55b, type: 2}
@@ -834,7 +839,7 @@ Prefab:
     - target: {fileID: 114000013298659806, guid: 163c896a46e8f8c47ae9f92d8a67b55b,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: buildingUpgrade
+      value: purchaseBuildingUpgrade
       objectReference: {fileID: 0}
     - target: {fileID: 114000013298659806, guid: 163c896a46e8f8c47ae9f92d8a67b55b,
         type: 2}
@@ -849,7 +854,7 @@ Prefab:
     - target: {fileID: 114000013298659806, guid: 163c896a46e8f8c47ae9f92d8a67b55b,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 163c896a46e8f8c47ae9f92d8a67b55b, type: 2}
@@ -1340,7 +1345,12 @@ Prefab:
     - target: {fileID: 114000013298659806, guid: 163c896a46e8f8c47ae9f92d8a67b55b,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
-      value: 2
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000013068168366, guid: 163c896a46e8f8c47ae9f92d8a67b55b,
+        type: 2}
+      propertyPath: m_Text
+      value: Upgrade 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 163c896a46e8f8c47ae9f92d8a67b55b, type: 2}
@@ -2235,7 +2245,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1875101045
 RectTransform:
   m_ObjectHideFlags: 0
