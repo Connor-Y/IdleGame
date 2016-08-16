@@ -25,18 +25,21 @@ public class StatTracker : Singleton<StatTracker>
     private float permanentUpgradeCostMultiplier;
     private long permanentClickIncrement;
 
+
+
+
     void Awake()
     {
         Debug.Log("Stats Awake");
         timeStamp = getUnixTime(); // TODO: Figure out how to store unix timestamp on app close or shutdown 
-        money = 100; // TODO: Set to decided starting value
+        money = 10000; // TODO: Set to decided starting value
         moneyPerClick = 1;
-        globalRateMultiplier = 1f;
-        globalClickMultiplier = 1f; 
+        globalRateMultiplier = 0f;
+        globalClickMultiplier = 0f; 
         globalUpgradeCostMultiplier = 1f;
 
-        permanentRateMultiplier = 1f;
-        permanentClickMultiplier = 1f;
+        permanentRateMultiplier = 0f;
+        permanentClickMultiplier = 0f;
         permanentUpgradeCostMultiplier = 1f;
         permanentClickIncrement = 0;
 
@@ -186,10 +189,11 @@ public class StatTracker : Singleton<StatTracker>
         // TODO: Change this to run off of a servers time. Need a way to handle offline mode.
         if (timeStamp < getUnixTime())
         {
-            money += moneyRate * (int)(getUnixTime() - timeStamp);
+            money += (long) ((moneyRate * (int)(getUnixTime() - timeStamp)) * (1 + globalRateMultiplier + permanentRateMultiplier));
             timeStamp = getUnixTime();
         }
         updateMoneyText();
 
     }
+
 }

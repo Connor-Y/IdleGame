@@ -14,7 +14,7 @@ public class ClickerController : Singleton<ClickerController> {
 
     public void buttonPressed()
     { // TODO: Decide on the order of operations here
-        stats.incrementMoney((long) (stats.getMoneyPerClick() * stats.getGlobalClickMultiplier() * stats.getPermanentClickMultiplier()) + stats.getPermanentClickIncrement());
+        stats.incrementMoney((long) (stats.getMoneyPerClick() * (1 + stats.getGlobalClickMultiplier() + stats.getPermanentClickMultiplier())) + stats.getPermanentClickIncrement());
     }
 
 }

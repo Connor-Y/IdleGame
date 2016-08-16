@@ -9,13 +9,12 @@ public class SingleUseUpgrades : UpgradeObject
     private bool alreadyPurchased;
 
     // public UpgradeObject (string objectName, long baseCost, float baseMultiplier, long baseModifier, bool isClicker, int baseLevel = 0)
-    public SingleUseUpgrades(string objectName, long baseCost, bool isClicker, float multiplier = 1f, long flatIncrement = 0) : base(objectName, baseCost, 1, 0, isClicker)
+    public SingleUseUpgrades(string objectName, long baseCost, bool isClicker, int upgradeType, bool isShowing = true, float multiplier = 1f, long flatIncrement = 0) : base(objectName, baseCost, 1, 0, isClicker, upgradeType, isShowing)
     {
         this.multiplier = multiplier;
         this.flatIncrement = flatIncrement;
         alreadyPurchased = false;
-
-    }
+}
     
     public new float getMultiplier()
     {
@@ -41,14 +40,15 @@ public class SingleUseUpgrades : UpgradeObject
             return;
         }
 
-        if (basicPurchase())
+        if (base.purchase())
         {
             alreadyPurchased = true;
-            // TODO: Hide entity here
+            //toggleVisible(); // TODO: Decide whether we want to hide purchased upgrades or leave them showing (showing prob better) (for now they hide)
         }
 
 
 
     }
+
 
 }

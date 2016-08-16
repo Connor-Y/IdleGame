@@ -30,8 +30,5 @@ public class MenuController : MonoBehaviour {
 
         isShowing = true;
         upgradeMenuPanel.SetActive(true);
-
-
-
     }
 }
