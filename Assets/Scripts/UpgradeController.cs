@@ -7,12 +7,6 @@ public class UpgradeController : Singleton<UpgradeController>
 
     private UpgradeController() { }
 
-
-    //private GameObject[] upgradeList;
-
-
-
-
     private StatTracker stats;
     private Dictionary<int, UpgradeObject> UpgradeObjectDict;
     private const float flatMultiplier = 1.07f;
@@ -39,13 +33,17 @@ public class UpgradeController : Singleton<UpgradeController>
         UpgradeObjectDict.Add(13, new UpgradeObject("13", 26500000000, flatMultiplier, 13812800, false));
         UpgradeObjectDict.Add(14, new UpgradeObject("14", 250000000000, flatMultiplier, 92000000, false));
         UpgradeObjectDict.Add(15, new UpgradeObject("15", 3200000000000, flatMultiplier, 603400000, false));
-        UpgradeObjectDict.Add(16, new UpgradeObject("C1", 50, flatMultiplier, 1, true));
 
+        // Clicker Upgrades
+        UpgradeObjectDict.Add(16, new UpgradeObject("C1", 50, flatMultiplier, 1, true));
+        Debug.Log(UpgradeObjectDict.ToString());
         // TODO: Make sure to actually add the effects of every object that starts with a base level above 0
     }
 
     private bool checkValidId(int id)
     {
+        Debug.Log("ID " + id);
+        Debug.Log(UpgradeObjectDict.ToString());
         if (UpgradeObjectDict.ContainsKey(id))
             return true;
 
@@ -54,7 +52,7 @@ public class UpgradeController : Singleton<UpgradeController>
 
     private UpgradeObject getUpgradeWithId(int id)
     {
-        return UpgradeObjectDict[id];  
+        return UpgradeObjectDict[id];
     }
 
     // int id refers to the id of the chosen upgrade
@@ -66,14 +64,14 @@ public class UpgradeController : Singleton<UpgradeController>
             Debug.Log("Invalid ID");
             return;
         }
-      
+
         UpgradeObject obj = getUpgradeWithId(id);
-        
+
 
         // Attempt to purchase the upgrade
         obj.purchase();
 
     }
- 
- 
+
+
 }
