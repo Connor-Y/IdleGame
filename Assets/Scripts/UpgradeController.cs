@@ -9,6 +9,7 @@ public class UpgradeController : Singleton<UpgradeController>
 
     private Dictionary<int, UpgradeObject> UpgradeObjectDict;
     private const float flatMultiplier = 1.07f;
+    private bool isShowing = true;
 
     void Start()
     {

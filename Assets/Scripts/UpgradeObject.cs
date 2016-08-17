@@ -188,21 +188,7 @@ protected StatTracker stats;
 
     }
 
-    // This doesn't work. Try looking up .enabled
-/*
-    public void toggleVisible()
-    {
-        
-        if (isShowing)
-        {
-            upgradeObject.SetActive(true);
-            return;
-        }
 
-        upgradeObject.SetActive(false);
-        isShowing = !isShowing;
-    }
-    */
 
     public string getName()
     {
