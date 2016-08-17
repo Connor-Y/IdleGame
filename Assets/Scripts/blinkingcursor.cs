@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class blinkingcursor : MonoBehaviour {
+public class BlinkingCursor : MonoBehaviour {
     TextMesh txt;
     float timer = 0.5f;
 	// Use this for initialization
