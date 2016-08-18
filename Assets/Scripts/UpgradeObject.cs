@@ -28,7 +28,7 @@ public class UpgradeObject // : ScriptableObject
     protected StatTracker stats;
     protected EntityHandler entityHandler = null;
 
-    public UpgradeObject (string objectName, long baseCost, float baseCostMultiplier, long baseModifier, bool isClicker, int maxLevel = 0, int upgradeType = 0, float baseMultiplier = 1f, int baseLevel = 0)
+    public UpgradeObject (string objectName, long baseCost, float baseCostMultiplier, long baseModifier, bool isClicker, int upgradeType = 0, float baseMultiplier = 1f, int maxLevel = 0, int baseLevel = 0)
     {  
 
         this.objectName = objectName;
@@ -141,6 +141,7 @@ public class UpgradeObject // : ScriptableObject
     // returns true if purchase was successful
     private void handlePurchase()
     {
+
         switch (upgradeType)
         {
             case 0:
@@ -189,6 +190,7 @@ public class UpgradeObject // : ScriptableObject
 
     }
 
+
     public string getName()
     {
         return objectName;
@@ -229,10 +231,16 @@ public class UpgradeObject // : ScriptableObject
         return isClicker;
     }
 
+    public int getUpgradeType()
+    {
+        return upgradeType;
+    }
+
     public void reset()
     {
         numOfUpgradesPurchased = defaultLevel;
     }
+
 
     public void setId(int id)
     {
