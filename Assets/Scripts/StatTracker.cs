@@ -25,8 +25,9 @@ public class StatTracker : Singleton<StatTracker>
     private float permanentUpgradeCostMultiplier;
     private long permanentClickIncrement;
 
-
-
+    
+    // Private to prevent being called outside of singleton instance.
+    private StatTracker() { }
 
     void Awake()
     {
@@ -45,8 +46,6 @@ public class StatTracker : Singleton<StatTracker>
 
     }
  
-    // Private to prevent being called outside of singleton instance.
-    private StatTracker() { }
 
     public long getMoney()
     { 

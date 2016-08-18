@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 
-public class UpgradeObject {
-
-
+public class UpgradeObject // : ScriptableObject
+{
+    // Unique ID
+    private int id = 0;
     // String Name
     private string objectName;
     // # of upgrades purchased
@@ -24,14 +23,14 @@ public class UpgradeObject {
     // instance flat = 0, instance multiplier = 1, both instance flat and multiplier = 2, instance cost multipler = 3
     // permanent rate = 4, permanent cost = 5, permanent flat click = 6
     private int upgradeType;
-    // determine whether the upgrade is visible
-    private bool isShowing;
+    private int maxLevel;
 
+    protected StatTracker stats;
+    protected EntityHandler entityHandler = null;
 
-protected StatTracker stats;
+    public UpgradeObject (string objectName, long baseCost, float baseCostMultiplier, long baseModifier, bool isClicker, int maxLevel = 0, int upgradeType = 0, float baseMultiplier = 1f, int baseLevel = 0)
+    {  
 
-    public UpgradeObject (string objectName, long baseCost, float baseCostMultiplier, long baseModifier, bool isClicker, int upgradeType = 0, bool isShowing = true, float baseMultiplier = 1f, int baseLevel = 0)
-    {
         this.objectName = objectName;
         numOfUpgradesPurchased = baseLevel;
         defaultLevel = baseLevel;
@@ -41,11 +40,9 @@ protected StatTracker stats;
         this.isClicker = isClicker;
         this.upgradeType = upgradeType;
         this.baseMultiplierUpgrade = baseMultiplier;
-        this.isShowing = isShowing;
-       // if (!isShowing)
-         //   toggleVisible();
-
+        this.maxLevel = maxLevel;
         stats = StatTracker.Instance;
+
     }
 
 
@@ -58,7 +55,6 @@ protected StatTracker stats;
             costBeforeGlobal = baseUpgradeCost;
         else
             costBeforeGlobal = (long)(baseUpgradeCost * Mathf.Pow(baseUpgradeCostMultiplier, numOfUpgradesPurchased));
-
 
         long finalCost = (long)(costBeforeGlobal * stats.getGlobalUpgradeCostMultiplier() * stats.getPermanentUpgradeCostMultiplier());// TODO: Multiply by global modifiers here
 
@@ -145,7 +141,6 @@ protected StatTracker stats;
     // returns true if purchase was successful
     private void handlePurchase()
     {
-
         switch (upgradeType)
         {
             case 0:
@@ -174,25 +169,39 @@ protected StatTracker stats;
         stats.decrementMoney(costFormula());
         // Increment the upgrades level
         numOfUpgradesPurchased += 1;
-
     }
 
     public bool purchase()
     {
-        if (canAfford())
+        Debug.Log("Purchasing " + objectName + " Lvl " + numOfUpgradesPurchased + " Max " + maxLevel);
+        // Check that you can afford it and that you are not exceeding the level cap
+        if (canAfford() && (numOfUpgradesPurchased < maxLevel || maxLevel == 0))
         {
             handlePurchase();
+            if (numOfUpgradesPurchased >= maxLevel && maxLevel != 0)
+            {
+                Debug.Log("Toggle Active on id " + id);
+                entityHandler.toggleActive();
+            }
             return true;
         }
         return false;
 
     }
 
-
-
     public string getName()
     {
         return objectName;
+    }
+
+    public int getLevel()
+    {
+        return numOfUpgradesPurchased;
+    }
+     
+    public int getMaxLevel()
+    {
+        return maxLevel;
     }
 
     public long getBaseCost()
@@ -224,6 +233,42 @@ protected StatTracker stats;
     {
         numOfUpgradesPurchased = defaultLevel;
     }
+
+    public void setId(int id)
+    {
+        if (this.id != 0)
+        {
+            Debug.LogError("Error: Attemping to change a set id - # " + this.id);
+            return;
+        }
+        this.id = id;
+    }
+
+
+    public void setEntityHandler(EntityHandler entityHandler)
+    {
+        if (this.entityHandler != null)
+        {
+            Debug.LogError("Error: Attemping to change a set EntityHandler with id " + this.id);
+            return;
+        }
+        this.entityHandler = entityHandler;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public EntityHandler getEntityHandler()
+    {
+        if (entityHandler == null)
+        {
+            Debug.LogError("Attempting to get null EntityHandler");
+        }
+        return entityHandler;
+    }
+
 
 }
 

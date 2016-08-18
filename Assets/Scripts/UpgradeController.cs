@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
+
 
 public class UpgradeController : Singleton<UpgradeController>
 {
@@ -9,15 +9,21 @@ public class UpgradeController : Singleton<UpgradeController>
 
     private Dictionary<int, UpgradeObject> UpgradeObjectDict;
     private const float flatMultiplier = 1.07f;
-    private bool isShowing = true;
+    private int numOfUpgrades = 0;
 
-    void Start()
+    void Awake()
     {
         Debug.Log("UpgradeController Start");
         UpgradeObjectDict = new Dictionary<int, UpgradeObject>();
 
+        // public UpgradeObject (string objectName, long baseCost, float baseCostMultiplier, long baseModifier, bool isClicker,
+        // int maxLevel = 0, int upgradeType = 0, float baseMultiplier = 1f, int baseLevel = 0)
+
+        // instance flat = 0, instance multiplier = 1, both instance flat and multiplier = 2, instance cost multipler = 3
+        // permanent rate = 4, permanent cost = 5, permanent flat click = 6
 
 
+        
         // Add each possible upgrade to the upgradelist
         UpgradeObjectDict.Add(1, new UpgradeObject("G1", 25, flatMultiplier, 1, false));
         UpgradeObjectDict.Add(2, new UpgradeObject("G2", 150, flatMultiplier, 6, false));
@@ -36,31 +42,26 @@ public class UpgradeController : Singleton<UpgradeController>
         UpgradeObjectDict.Add(15, new UpgradeObject("G15", 3200000000000, flatMultiplier, 603400000, false));
 
         // Clicker Flat Upgrades
-        UpgradeObjectDict.Add(16, new UpgradeObject("C1", 50, flatMultiplier, 1, true));
-
-        // instance flat = 0, instance multiplier = 1, both instance flat and multiplier = 2, instance cost multipler = 3
-        // permanent rate = 4, permanent cost = 5, permanent flat click = 6
-
-        // public UpgradeObject (string objectName, long baseCost, float baseCostMultiplier, long baseModifier, bool isClicker,
-        // int upgradeType = 0, bool isShowing = true, float baseMultiplier = 1f, int baseLevel = 0)
+        UpgradeObjectDict.Add(16, new UpgradeObject("C1", 50, flatMultiplier, 0, true));
 
         // Global Rate Mulitpliers
-        UpgradeObjectDict.Add(17, new UpgradeObject("GR1", 10, flatMultiplier, 0, false, 1, true, 1f));
+        UpgradeObjectDict.Add(17, new UpgradeObject("GR1", 10, flatMultiplier, 0, false, 1, 1, 1f));
         // Clicker Rate upgrade
-        UpgradeObjectDict.Add(18, new UpgradeObject("GCR1", 50, flatMultiplier, 0, true, 1, true, 1f));
+        UpgradeObjectDict.Add(18, new UpgradeObject("GCR1", 50, flatMultiplier, 0, true, 0, 1, 1f));
 
         // Global Cost Reduction
-        UpgradeObjectDict.Add(19, new UpgradeObject("GC1", 10, flatMultiplier, 5, false, 3, true, 1f));
+        UpgradeObjectDict.Add(19, new UpgradeObject("GC1", 10, flatMultiplier, 5, false, 0, 3, 1f));
 
         // Perm Rate
-        UpgradeObjectDict.Add(20, new UpgradeObject("PR1", 10, flatMultiplier, 5, false, 4, true, 1f));
+        UpgradeObjectDict.Add(20, new UpgradeObject("PR1", 10, flatMultiplier, 5, false, 0, 4, 1f));
 
         // Perm Cost Reduction
-        UpgradeObjectDict.Add(21, new UpgradeObject("PC1", 10, flatMultiplier, 5, false, 5, true, 1f));
+        UpgradeObjectDict.Add(21, new UpgradeObject("PC1", 10, flatMultiplier, 5, false, 0, 5, 1f));
 
         // Perm Flat Click
-        UpgradeObjectDict.Add(22, new UpgradeObject("PFC1", 10, flatMultiplier, 5, true, 6));
+        UpgradeObjectDict.Add(22, new UpgradeObject("PFC1", 10, flatMultiplier, 5, true, 0, 6));
 
+        numOfUpgrades = UpgradeObjectDict.Count;
         // TODO: Make sure to actually add the effects of every object that starts with a base level above 0 (Maybe for prestige only so move elsewhere?)
     }
 
@@ -73,7 +74,7 @@ public class UpgradeController : Singleton<UpgradeController>
         return false;
     }
 
-    private UpgradeObject getUpgradeWithId(int id)
+    public UpgradeObject getUpgradeWithId(int id)
     {
         return UpgradeObjectDict[id];
     }
@@ -84,16 +85,21 @@ public class UpgradeController : Singleton<UpgradeController>
         // Check if id is valid
         if (!checkValidId(id))
         {
-            Debug.Log("Invalid ID");
+            Debug.Log("Invalid ID " + id);
             return;
         }
 
         UpgradeObject obj = getUpgradeWithId(id);
-
+        
 
         // Attempt to purchase the upgrade
         obj.purchase();
 
+    }
+
+    public int getNumOfUpgrades()
+    {
+        return numOfUpgrades;
     }
 
 
