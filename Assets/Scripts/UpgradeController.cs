@@ -45,21 +45,23 @@ public class UpgradeController : Singleton<UpgradeController>
         UpgradeObjectDict.Add(16, new UpgradeObject("C1", 50, flatMultiplier, 0, true));
 
         // Global Rate Mulitpliers
-        UpgradeObjectDict.Add(17, new UpgradeObject("GR1", 10, flatMultiplier, 0, false, 1, 1, 1f));
+        UpgradeObjectDict.Add(17, new UpgradeObject("GR1", 10, flatMultiplier, 0, false, 1, 1f, 2));
         // Clicker Rate upgrade
-        UpgradeObjectDict.Add(18, new UpgradeObject("GCR1", 50, flatMultiplier, 0, true, 0, 1, 1f));
+        UpgradeObjectDict.Add(18, new UpgradeObject("GCR1", 50, flatMultiplier, 0, true, 1, 1f, 9));
 
         // Global Cost Reduction
-        UpgradeObjectDict.Add(19, new UpgradeObject("GC1", 10, flatMultiplier, 5, false, 0, 3, 1f));
+        UpgradeObjectDict.Add(19, new UpgradeObject("GC1", 10, flatMultiplier, 5, false, 3, 1f, 1));
 
         // Perm Rate
-        UpgradeObjectDict.Add(20, new UpgradeObject("PR1", 10, flatMultiplier, 5, false, 0, 4, 1f));
+        UpgradeObjectDict.Add(20, new UpgradeObject("PR1", 10, flatMultiplier, 5, false, 4, 1f, 1));
 
         // Perm Cost Reduction
-        UpgradeObjectDict.Add(21, new UpgradeObject("PC1", 10, flatMultiplier, 5, false, 0, 5, 1f));
+        UpgradeObjectDict.Add(21, new UpgradeObject("PC1", 10, flatMultiplier, 5, false, 5, 1f, 1));
 
         // Perm Flat Click
-        UpgradeObjectDict.Add(22, new UpgradeObject("PFC1", 10, flatMultiplier, 5, true, 0, 6));
+        UpgradeObjectDict.Add(22, new UpgradeObject("PFC1", 10, flatMultiplier, 5, true, 0, 6, 1));
+
+        UpgradeObjectDict.Add(23, new PowerUp("PU1", 10, 10, false, 3000));
 
         numOfUpgrades = UpgradeObjectDict.Count;
         // TODO: Make sure to actually add the effects of every object that starts with a base level above 0 (Maybe for prestige only so move elsewhere?)
@@ -79,6 +81,17 @@ public class UpgradeController : Singleton<UpgradeController>
         return UpgradeObjectDict[id];
     }
 
+    private PowerUp getPowerUpWithId(int id)
+    {
+        return (PowerUp) UpgradeObjectDict[id];
+    }
+
+    private bool isPowerUp(int id)
+    {
+        if (getUpgradeWithId(id).GetType().Equals(typeof(PowerUp)))
+            return true;
+        return false;
+    }
     // int id refers to the id of the chosen upgrade
     public void purchaseBuildingUpgrade(int id)
     {
@@ -89,11 +102,22 @@ public class UpgradeController : Singleton<UpgradeController>
             return;
         }
 
-        UpgradeObject obj = getUpgradeWithId(id);
+
+        if (isPowerUp(id))
+        {
+            PowerUp obj = getPowerUpWithId(id);
+            obj.purchase();
+        } else
+        {
+            UpgradeObject obj = getUpgradeWithId(id);
+            // Attempt to purchase the upgrade
+            obj.purchase();
+
+        }
+        
         
 
-        // Attempt to purchase the upgrade
-        obj.purchase();
+        
 
     }
 
