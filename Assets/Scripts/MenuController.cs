@@ -5,30 +5,24 @@ public class MenuController : MonoBehaviour {
 
 
     private bool isShowing;
-    public GameObject upgradeMenuPanel;
+    public GameObject menuPanel;
 
     // Use this for initialization
     void Start () {
-        isShowing = false;
-
+        isShowing = menuPanel.activeSelf;
     }
 	
-
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
     public void activateMenu()
     {
         if (isShowing)
         {
             isShowing = false;
-            upgradeMenuPanel.SetActive(false);
+            menuPanel.SetActive(false);
             return;
         }
 
         isShowing = true;
-        upgradeMenuPanel.SetActive(true);
+        menuPanel.SetActive(true);
     }
 }

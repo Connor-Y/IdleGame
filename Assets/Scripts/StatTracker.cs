@@ -25,15 +25,25 @@ public class StatTracker : Singleton<StatTracker>
     private float permanentUpgradeCostMultiplier;
     private long permanentClickIncrement;
 
-    
+    private long startingMoney = 10000;
+
+    // Non-gameplay stats
+    private long totalMoneyEarned;
+    private long highestAmountHeld;
+    private long highestRate;
+    private long totalClicks;
+    private long highestClicksPerSecond;
+
+
     // Private to prevent being called outside of singleton instance.
     private StatTracker() { }
 
     void Awake()
     {
         Debug.Log("Stats Awake");
-        timeStamp = getUnixTime(); // TODO: Figure out how to store unix timestamp on app close or shutdown 
-        money = 10000; // TODO: Set to decided starting value
+        timeStamp = getUnixTime(); 
+        money = startingMoney;
+        totalMoneyEarned = 0;
         moneyPerClick = 1;
         globalRateMultiplier = 0f;
         globalClickMultiplier = 0f; 
@@ -44,6 +54,11 @@ public class StatTracker : Singleton<StatTracker>
         permanentUpgradeCostMultiplier = 1f;
         permanentClickIncrement = 0;
 
+    }
+
+    public long getStartingMoney()
+    {
+        return startingMoney;
     }
  
 
@@ -59,7 +74,7 @@ public class StatTracker : Singleton<StatTracker>
 
     public long getMoneyRate()
     {
-        return moneyRate;
+        return (long)(moneyRate * (1 + globalRateMultiplier + permanentRateMultiplier));
     }
 
     public float getGlobalRateMultiplier()
@@ -180,6 +195,7 @@ public class StatTracker : Singleton<StatTracker>
     {
         return (long)(System.DateTime.UtcNow.Subtract(new System.DateTime(1970, 1, 1))).TotalSeconds;
     }
+
 
     // Update is called once per frame
     void Update()

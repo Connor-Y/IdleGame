@@ -11,6 +11,10 @@ public class UpgradeController : Singleton<UpgradeController>
     private const float flatMultiplier = 1.07f;
     private int numOfUpgrades = 0;
 
+    public GameObject keyboard;
+    public GameObject chair;
+
+
     void Awake()
     {
         Debug.Log("UpgradeController Start");

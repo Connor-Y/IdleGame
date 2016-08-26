@@ -5,6 +5,7 @@ public class EntityHandler : MonoBehaviour {
     private bool isActive = true;
     private bool isVisible = true;
 
+
     void Start()
     {
         isVisible = isActive;
@@ -13,7 +14,6 @@ public class EntityHandler : MonoBehaviour {
     public void toggleActive()
     {
         isActive = !isActive;
-        isVisible = !isVisible;
         gameObject.SetActive(isActive);
     }
  
